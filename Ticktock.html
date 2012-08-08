@@ -1,0 +1,158 @@
+
+<!-- saved from url=(0036)http://daneden.me/labs/pendulum.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Tick, tock.</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<style type="text/css" id="animationDefinition">
+	@-webkit-keyframes swinging {
+		0% {				-webkit-transform: rotate(0deg);			}
+		100% {				-webkit-transform: rotate(0deg);			}
+	}
+	body {			text-align: center;			background: #444;		}
+	.pendulum {	
+		margin: 0 auto;
+		position: relative;
+		background: #ddd;
+		color: #333;
+		width: 128px;
+		height: 128px;
+		line-height: 128px;
+		-webkit-border-radius: 1000px;
+		margin: 0 0 0 -53px;
+		font-weight: bold;
+		-webkit-box-shadow: 0 0 20px rgba(0,0,0,.3);		}
+	.container {
+		padding-top: 200px;
+		background: #ddd;
+		width: 20px;
+		-webkit-transform-origin: top;
+		margin: 0 auto;
+		-webkit-border-radius: 1000px;
+		-webkit-box-shadow: 0 0 20px rgba(0,0,0,.3);
+	}
+	.swinger {
+		-webkit-animation: swinging 10s 1 ease-in-out;
+	}
+	</style>
+</head>
+<body>
+	<script>
+
+
+// search the CSSOM for a specific rule
+function findCssRule(rule) {
+        // gather all stylesheets into an array
+        var ss = document.styleSheets;
+        
+        // loop through the stylesheets
+        for (var i = 0; i < ss.length; ++i) {
+            
+            // loop through all the rules
+            for (var j = 0; j < ss[i].cssRules.length; ++j) {
+                // find the -webkit-keyframe rule whose name matches our passed over parameter and return that rule
+                if (ss[i].cssRules[j].selectorText == rule)
+                    return ss[i].cssRules[j];
+            }
+        }
+        // rule not found
+        return null;
+}
+
+// search the CSSOM for a specific -webkit-keyframe rule
+function findKeyframesRule(rule) {
+        // gather all stylesheets into an array
+        var ss = document.styleSheets;
+        
+        // loop through the stylesheets
+        for (var i = 0; i < ss.length; ++i) {
+            
+            // loop through all the rules
+            for (var j = 0; j < ss[i].cssRules.length; ++j) {
+                
+                // find the -webkit-keyframe rule whose name matches our passed over parameter and return that rule
+                if (ss[i].cssRules[j].type == window.CSSRule.WEBKIT_KEYFRAMES_RULE && ss[i].cssRules[j].name == rule)
+                    return ss[i].cssRules[j];
+            }
+        }
+        // rule not found
+        return null;
+}
+
+var swingDurationRule = findCssRule(".container");
+
+// remove old keyframes and add new ones
+function change(anim)
+    {
+        // find our -webkit-keyframe rule
+        var keyframes = findKeyframesRule(anim);
+        
+        // remove the existing % rules - for every int from 0 to 100
+        for (var pc=0; pc <= 100; pc++ ) {
+        	keyframes.deleteRule(pc + "%");
+        }
+        
+        
+        //var startingAngle = 45;
+        var startingAngle = randomFromTo(-90,90);
+        var damping = 1.9;
+        var period=0.9; // in seconds, for a complete swing and swing back
+        var overallDuration = 9.2; // in seconds
+
+        var swingTime = period/2;
+        for (var time=0; time <= overallDuration; time=time+swingTime) {
+        	var pc = Math.round(time* (100/overallDuration));
+        	var angle = getAngle(startingAngle, period, time, damping);
+        	console.log("percent is " + pc + "% and time is " + time + ".  The new angle is " + angle);
+        	keyframes.insertRule( pc + "% { -webkit-transform: rotate("+angle+"deg); }");
+        }
+        // create rules
+        //keyframes.insertRule("0% { -webkit-transform: rotate(-"+rand+"deg); }");
+        //keyframes.insertRule("50% { -webkit-transform: rotate("+rand+"deg); }");
+        keyframes.insertRule("100% { -webkit-transform: rotate(0deg); }"); // a bit hacky but it helps remove leaps at the end
+
+        swingDurationRule.style.webkitAnimationDuration = overallDuration + "s";
+        
+        // assign the animation to our element (which will cause the animation to run)
+        document.getElementById('c').style.webkitAnimationName = anim;
+    }
+
+// begin the new animation process
+function startChange()
+    {
+        // remove the old animation from our object
+        document.getElementById('c').style.webkitAnimationName = "none";
+        // call the change method, which will update the keyframe animation
+        setTimeout(function(){change("swinging");}, 0);
+    }
+
+// get a random number integer between two low/high extremes
+function randomFromTo(from, to){
+       return Math.floor(Math.random() * (to - from + 1) + from);
+}
+
+$(function() {
+    $('#update-box').bind('click',function(e) {
+        e.preventDefault();
+        startChange();        
+    });        
+});
+
+
+
+function getAngle(Θ, period, time, decayConstant) {
+	// memory notes for russ - decayConstant should be really big for small damping.  Period is for a whole cycle.
+	var angle = Θ * Math.exp(-time/decayConstant) * Math.cos((2* Math.PI * time) / period);
+	return angle
+}
+
+
+	</script>
+	<div class="container swinger" id="c">
+		galrs
+		<div class="pendulum">
+			tick, tock.
+		</div>
+	</div>
+
+<div id="update-box">Run Another Animation</div>
+</body></html>
