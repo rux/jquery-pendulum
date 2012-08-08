@@ -22,7 +22,7 @@
 		font-weight: bold;
 		-webkit-box-shadow: 0 0 20px rgba(0,0,0,.3);		}
 	.container {
-		padding-top: 200px;
+		padding-top: 100px;
 		background: #ddd;
 		width: 20px;
 		-webkit-transform-origin: top;
@@ -113,14 +113,16 @@ function change(anim)
         swingDurationRule.style.webkitAnimationDuration = overallDuration + "s";
         
         // assign the animation to our element (which will cause the animation to run)
-        document.getElementById('c').style.webkitAnimationName = anim;
+        //$('.swinger').get(0).style.webkitAnimationName = anim;
+        $('.swinger').each( function() { this.style.webkitAnimationName = anim } );
     }
 
 // begin the new animation process
 function startChange()
     {
         // remove the old animation from our object
-        document.getElementById('c').style.webkitAnimationName = "none";
+        // $('.swinger').get(0).style.webkitAnimationName = "none";
+        $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
         // call the change method, which will update the keyframe animation
         setTimeout(function(){change("swinging");}, 0);
     }
@@ -147,12 +149,21 @@ function getAngle(Θ, period, time, decayConstant) {
 
 
 	</script>
-	<div class="container swinger" id="c">
-		galrs
-		<div class="pendulum">
-			tick, tock.
-		</div>
-	</div>
+    <div class="container swinger" id="c">
+        galrs
+        <div class="pendulum">
+            tick, tock.
+        </div>
+    </div>
+    <div class="container swinger" id="d">
+        galrs
+        <div class="pendulum">
+            tick, tock.
+        </div>
+    </div>
 
+    <div class="swinger" style="padding-top:6em;">
+        asdfa as d
+    </div>
 <div id="update-box">Run Another Animation</div>
 </body></html>
