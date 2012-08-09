@@ -105,7 +105,8 @@ function change(anim, sAngle)
         	var pc = time* (100/overallDuration);
         	var angle = getAngle(startingAngle, period, time, damping);
         	console.log("percent is " + pc + "% and time is " + time + ".  The new angle is " + angle);
-        	keyframes.insertRule( pc + "% { -webkit-transform: rotate("+angle+"deg); }");
+            keyframes.insertRule( pc + "% { -webkit-transform: rotate("+angle+"deg); }");
+            //keyframes.insertRule( pc + "% { -webkit-transform: rotate3s(1 1 3 "+angle+"deg); }");
         }
         // create rules
         //keyframes.insertRule("0% { -webkit-transform: rotate(-"+rand+"deg); }");
@@ -192,8 +193,8 @@ $(document).ready(function() {
         { stop: function(event, ui) {
             console.log("stop");
             console.log(event);
-            console.log(ui);
-        startChange( $("#startAngle").val()  );      
+            console.log(ui);   
+            startChange( $("#startAngle").val());   
         }}
 
     );
