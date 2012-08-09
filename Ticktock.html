@@ -11,27 +11,21 @@
 	body {			text-align: center;			background: #444;		}
 	.pendulum {	
 		margin: 0 auto;
-		position: relative;
-		background: #ddd;
+		
+		background: #ccc;
 		color: #333;
-		width: 128px;
-		height: 128px;
-		line-height: 128px;
 		-webkit-border-radius: 1000px;
-		margin: 0 0 0 -53px;
+		margin: 0 px;
 		font-weight: bold;
 		-webkit-box-shadow: 0 0 20px rgba(0,0,0,.3);		}
 	.container {
 		padding-top: 100px;
 		background: #ddd;
-		width: 20px;
-		-webkit-transform-origin: top;
-		margin: 0 auto;
-		-webkit-border-radius: 1000px;
-		-webkit-box-shadow: 0 0 20px rgba(0,0,0,.3);
+        display:inline-block;
 	}
 	.swinger {
-		-webkit-animation: swinging 10s 1 ease-in-out;
+        -webkit-transform-origin: top;
+		-webkit-animation: swinging 1s 1 ease-in-out;
 	}
 	</style>
 </head>
@@ -78,53 +72,58 @@ function findKeyframesRule(rule) {
         return null;
 }
 
-var swingDurationRule = findCssRule(".container");
+var swingDurationRule = findCssRule(".swinger");
 
 // remove old keyframes and add new ones
-function change(anim)
+function change(anim, sAngle)
     {
         // find our -webkit-keyframe rule
         var keyframes = findKeyframesRule(anim);
         
-        // remove the existing % rules - for every int from 0 to 100
-        for (var pc=0; pc <= 100; pc++ ) {
-        	keyframes.deleteRule(pc + "%");
+        // remove all of the existing % rules
+        for (var key in keyframes) {
+            var r = keyframes[key];
+            if (r instanceof WebKitCSSKeyframeRule) {
+                keyframes.deleteRule(r.keyText);
+            }
         }
         
         
-        //var startingAngle = 45;
-        var startingAngle = randomFromTo(-90,90);
+        var startingAngle = sAngle;
+        // var startingAngle = randomFromTo(-90,90);
         var damping = 1.9;
         var period=0.9; // in seconds, for a complete swing and swing back
-        var overallDuration = 9.2; // in seconds
+        var overallDuration = 14.2; // in seconds
+
+        swingDurationRule.style.webkitAnimationDuration = overallDuration + "s";
 
         var swingTime = period/2;
         for (var time=0; time <= overallDuration; time=time+swingTime) {
-        	var pc = Math.round(time* (100/overallDuration));
+        	var pc = time* (100/overallDuration);
         	var angle = getAngle(startingAngle, period, time, damping);
         	console.log("percent is " + pc + "% and time is " + time + ".  The new angle is " + angle);
         	keyframes.insertRule( pc + "% { -webkit-transform: rotate("+angle+"deg); }");
         }
         // create rules
         //keyframes.insertRule("0% { -webkit-transform: rotate(-"+rand+"deg); }");
-        //keyframes.insertRule("50% { -webkit-transform: rotate("+rand+"deg); }");
         keyframes.insertRule("100% { -webkit-transform: rotate(0deg); }"); // a bit hacky but it helps remove leaps at the end
 
-        swingDurationRule.style.webkitAnimationDuration = overallDuration + "s";
-        
         // assign the animation to our element (which will cause the animation to run)
-        //$('.swinger').get(0).style.webkitAnimationName = anim;
         $('.swinger').each( function() { this.style.webkitAnimationName = anim } );
+
+        $('.swinger').each( function() { console.log("height " + $(this).css("height")) } );
+        $(".swinger").each( function() { $(this).css("webkit-transform", "rotate(0deg)") } );
     }
 
 // begin the new animation process
-function startChange()
+function startChange( angle )
     {
         // remove the old animation from our object
-        // $('.swinger').get(0).style.webkitAnimationName = "none";
         $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
         // call the change method, which will update the keyframe animation
-        setTimeout(function(){change("swinging");}, 0);
+        setTimeout( function(){
+            change("swinging", angle);
+        }, 0);
     }
 
 // get a random number integer between two low/high extremes
@@ -133,10 +132,19 @@ function randomFromTo(from, to){
 }
 
 $(function() {
-    $('#update-box').bind('click',function(e) {
+    $('#start').bind('click',function(e) {
         e.preventDefault();
-        startChange();        
-    });        
+        startChange( $("#startAngle").val()  );        
+    });
+
+    $("#set").bind('click', function(e) {
+        e.preventDefault();
+
+        // remove the old animation from our object
+        $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
+        swingDurationRule.style.webkitAnimationDuration = "0s";
+        $(".swinger").each( function() { $(this).css("webkit-transform", "rotate(" + $("#startAngle").val() +"deg)") } )
+    })        
 });
 
 
@@ -150,20 +158,22 @@ function getAngle(Θ, period, time, decayConstant) {
 
 	</script>
     <div class="container swinger" id="c">
-        galrs
         <div class="pendulum">
             tick, tock.
         </div>
     </div>
-    <div class="container swinger" id="d">
-        galrs
+    <br/>
+    <div class="container swinger" id="d" >
         <div class="pendulum">
             tick, tock.
         </div>
     </div>
 
-    <div class="swinger" style="padding-top:6em;">
-        asdfa as d
-    </div>
-<div id="update-box">Run Another Animation</div>
+
+
+<div id="update-box">
+    <input type="text" value="45" id="startAngle" />
+    <button id="set">set start angle</button>
+    <button id="start">Run Another Animation</button>
+</div>
 </body></html>
