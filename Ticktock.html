@@ -94,7 +94,6 @@ function change(anim, sAngle)
         
         
         var startingAngle = sAngle;
-        // var startingAngle = randomFromTo(-90,90);
         var damping = 1.9;
         var period=0.9; // in seconds, for a complete swing and swing back
         var overallDuration = 11.1; // in seconds
@@ -128,9 +127,6 @@ function change(anim, sAngle)
 
 // begin the new animation process
 function startSwinging( angle , elements) {
-
-    console.log(elements);
-
     // remove the old animation from our object
     elements.each( function() { this.style.webkitAnimationName = "none" } );
     // correct for swings that are too large
@@ -143,31 +139,10 @@ function startSwinging( angle , elements) {
     }, 0);
 }
 
-// get a random number integer between two low/high extremes
-function randomFromTo(from, to){
-       return Math.floor(Math.random() * (to - from + 1) + from);
-}
-
-$(function() {
-    $('#start').bind('click',function(e) {
-        e.preventDefault();
-        startSwinging( $("#startAngle").val() , $('.swinger') );  // apply to all .swinger class objects       
-    });
-
-    $("#set").bind('click', function(e) {
-        e.preventDefault();
-
-        // remove the old animation from our object
-        $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
-        swingDurationRule.style.webkitAnimationDuration = "0s";
-        $(".swinger").each( function() { $(this).css("webkit-transform", "rotate(" + $("#startAngle").val() +"deg)") } )
-    })        
-});
-
 
 
 function getAngle(Θ, period, time, decayConstant) {
-	// memory notes for russ - decayConstant should be really big for small damping.  Period is for a whole cycle.
+	// physics note - decayConstant should be really big for small damping.  Period is for a whole cycle.
 	var angle = Θ * Math.exp(-time/decayConstant) * Math.cos((2* Math.PI * time) / period);
 	return angle
 }
@@ -184,6 +159,10 @@ function modifySwingByPendulumLength(pendulum) {
 
 
 
+
+
+
+// make dragging interaction
 $(document).ready(function() {
     $("#a").draggable(
         { axis: "x"},
@@ -202,6 +181,26 @@ $(document).ready(function() {
 
     );
   });
+
+
+
+// set up buttons in the form
+$(function() {
+    $('#start').bind('click',function(e) {
+        e.preventDefault();
+        startSwinging( $("#startAngle").val() , $('.swinger') );  // apply to all .swinger class objects       
+    });
+
+    $("#set").bind('click', function(e) {
+        e.preventDefault();
+
+        // remove the old animation from our object
+        $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
+        swingDurationRule.style.webkitAnimationDuration = "0s";
+        $(".swinger").each( function() { $(this).css("webkit-transform", "rotate(" + $("#startAngle").val() +"deg)") } )
+    })        
+});
+
 
 
 	</script>
