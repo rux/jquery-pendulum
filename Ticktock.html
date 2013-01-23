@@ -5,6 +5,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
   
+    <script src="jquery.pendulum.js"></script>
 
     <style type="text/css" id="animationDefinition">
 	@-webkit-keyframes swinging {
@@ -12,7 +13,7 @@
 		100% {				-webkit-transform: rotate(0deg);			}
 	}
 	body {			text-align: center;			background: #444;		}
-	.pendulum {	
+	.pendulum-bob {	
 		margin: 0 auto;
 		
 		background: #ccc;
@@ -126,19 +127,21 @@ function change(anim, sAngle)
     }
 
 // begin the new animation process
-function startChange( angle )
-    {
-        // remove the old animation from our object
-        $('.swinger').each( function() { this.style.webkitAnimationName = "none" } );
-        // correct for swings that are too large
-        if (angle < -90) {angle = -90;}
-        if (angle > 90) {angle = 90;}
+function startSwinging( angle , elements) {
 
-        // call the change method, which will update the keyframe animation
-        setTimeout( function(){
-            change("swinging", angle);
-        }, 0);
-    }
+    console.log(elements);
+
+    // remove the old animation from our object
+    elements.each( function() { this.style.webkitAnimationName = "none" } );
+    // correct for swings that are too large
+    if (angle < -90) {angle = -90;}
+    if (angle > 90) {angle = 90;}
+
+    // call the change method, which will update the keyframe animation
+    setTimeout( function(){
+        change("swinging", angle);
+    }, 0);
+}
 
 // get a random number integer between two low/high extremes
 function randomFromTo(from, to){
@@ -148,7 +151,7 @@ function randomFromTo(from, to){
 $(function() {
     $('#start').bind('click',function(e) {
         e.preventDefault();
-        startChange( $("#startAngle").val()  );        
+        startSwinging( $("#startAngle").val() , $('.swinger') );  // apply to all .swinger class objects       
     });
 
     $("#set").bind('click', function(e) {
@@ -194,7 +197,7 @@ $(document).ready(function() {
             console.log("stop");
             console.log(event);
             console.log(ui);   
-            startChange( $("#startAngle").val());   
+            startSwinging( $("#startAngle").val() , $('.swinger'));  // apply to all .swinger objects 
         }}
 
     );
@@ -206,21 +209,21 @@ $(document).ready(function() {
 <div id="a">
 
     <div class="container swinger" id="c">
-        <div class="pendulum">
+        <div class="pendulum-bob">
             tick, tock.
         </div>
     </div>
     <br/>
     <div class="container swinger" id="d" >
-        <div class="pendulum swinger">
+        <div class="pendulum-bob swinger">
             tick, tock<br/>tick tock.
         </div>
-        <div class="pendulum swinger">
+        <div class="pendulum-bob swinger">
             tick, tock<br/>tick tock.
         </div>
     </div>
     <div class="container swinger" id="e" >
-        <div class="pendulum">
+        <div class="pendulum-bob">
             tick, tock<br/>tick tock.<br/>tick tock.<br/>tick tock.<br/>tick tock.<br/>tick tock.<br/>tick tock.
         </div>
     </div>
@@ -237,4 +240,24 @@ $(document).ready(function() {
     <button id="set">set start angle</button>
     <button id="start">Run Another Animation</button>
 </div>
+
+
+
+<div id="pluginTester" style="background-color:red; width:80">
+    Test
+</div>
+
+<script>
+
+    $("#pluginTester").pendulum({rodLength:100});
+
+</script>
+
+
+
+
+
+
+
+
 </body></html>
