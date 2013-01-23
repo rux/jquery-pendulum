@@ -1,0 +1,64 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>An example of the jquery pendulum plugin</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+	<script src="jquery.pendulum.js"></script>
+	<link rel="stylesheet" id="animationDefinition" type="text/css" href="jquery.pendulum.css">
+
+	<style type="text/css">
+		body {
+			text-align: center;
+			background: #444;
+			font-family: sans-serif;
+		}
+	</style>
+    <script>
+
+    // an example of making a pendulum work from a ui interaction
+
+    var startAngle = 0
+    // make dragging interaction
+    $(document).ready(function() {
+        $("#a").draggable(
+            { axis: "x"},
+            { distance: 3 },
+            { drag: function(event, ui) {
+                startAngle = (ui.originalPosition.left - ui.position.left) /5 ;
+            }},
+            { stop: function(event, ui) {
+                $('.test').pendulum({startingAngle:startAngle});  // apply to all .test objects 
+            }}
+
+        );
+    });
+    </script>
+</head>
+<body>
+
+    <div id="a">
+
+    	<div class="test pendulum" id="b">
+            <div class="pendulum-rod" style="height:300px"></div>
+            <div class="pendulum-bob">
+                pre-existing pendulum
+            </div>
+    	</div>
+    	<br/>
+
+    	<div class="test" id="c" >
+            pendulum is <br/>generated on drag
+    	</div>
+
+
+    </div>
+
+    <div id="button-box">
+    	<button onClick="$(this).pendulum()">add a pendulum to this button</button>
+    </div>
+
+
+</body>
+</html>
