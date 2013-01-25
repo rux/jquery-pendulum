@@ -23,13 +23,13 @@ There are five.  Here they are, with their default vaules
 
 Pass these as an object to the .pendulum() method on a jquery object, eg for a shorter, faster pendulum than the defaults, this would work
 
-$("myDiv").pendulum({
-			'startingAngle' : 42,
-			'rodLength' : 60,
-			'damping' :1.8,
-			'period' :0.8,
-			'overallDuration' :10.1
-})
+    $("myDiv").pendulum({
+    			'startingAngle' : 42,
+    			'rodLength' : 60,
+    			'damping' :1.8,
+    			'period' :0.8,
+    			'overallDuration' :10.1
+    })
 
 ## AOB
 

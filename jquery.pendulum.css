@@ -12,7 +12,7 @@
 .pendulum {
 }
 .pendulum>.pendulum-rod {
-	/* background: transparent url(steel.png) repeat-y top ; */ /* example of a steel rod */
+	 background: transparent url(steel.png) repeat-y top ; /**/ /* example of a steel rod */
 }
 .pendulum>.pendulum-bob {
 }
