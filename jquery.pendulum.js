@@ -40,8 +40,6 @@
 			return null;
 		}
 
-		console.log(document.styleSheets);
-
 		var swingDurationRule = findCssRule(".swinger");
 
 
